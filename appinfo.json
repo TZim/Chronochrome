@@ -1,0 +1,36 @@
+{
+    "appKeys": {
+        "KEY_DJIA": 2,
+        "KEY_NASDAQ": 3,
+        "KEY_SUNRISE": 4,
+        "KEY_SUNSET": 5,
+        "KEY_TEMPERATURE": 0,
+        "KEY_UTC_OFFSET": 1
+    },
+    "capabilities": [
+        "location"
+    ],
+    "companyName": "Cambridge Apps",
+    "longName": "Chronochrome",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/chron_icon.png",
+                "menuIcon": true,
+                "name": "IMAGE_MENU_ICON",
+                "type": "png"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "Chrnchrm",
+    "targetPlatforms": [
+        "basalt"
+    ],
+    "uuid": "a4f19f47-c3a1-4c8f-b0b5-3787a85000cd",
+    "versionLabel": "2.1",
+    "watchapp": {
+        "watchface": false
+    }
+}
