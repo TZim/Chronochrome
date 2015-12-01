@@ -19,17 +19,17 @@ typedef struct sec_ms {
 void get_current_sec_ms(Sec_ms *secms);
 void add_sec_ms(Sec_ms *secms, Sec_ms inc);
 void subtract_sec_ms(Sec_ms *secms, Sec_ms dec);
-uint16_t hour_from_seconds(uint16_t secs);
-uint16_t minute_from_seconds(uint16_t secs);
-uint16_t dminute_from_seconds(uint16_t secs);
-uint16_t second_from_seconds(uint16_t secs);
+unsigned hour_from_seconds(time_t secs);
+unsigned minute_from_seconds(time_t secs);
+unsigned dminute_from_seconds(time_t secs);
+unsigned second_from_seconds(time_t secs);
 bool sec_ms_is_zero(Sec_ms n);
 
 void localtm(time_t *time, struct tm *tm1);
 
 #define FAKE_TIME false
 #define FAKE_HOUR 9
-#define FAKE_MIN 18
+#define FAKE_MIN 17
 #define FAKE_SEC 00
 #define FAKE_MDAY 23
 #define FAKE_MON 7

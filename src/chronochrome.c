@@ -992,8 +992,8 @@ static void init(void) {
     
   text_layer_setup(get_usrinfo1_txlayer(), usrinfo1, get_fontsm(), GColorBlack, GTextAlignmentLeft);
   text_layer_setup(get_usrinfo2_txlayer(), usrinfo2, get_fontsm(), GColorBlack, GTextAlignmentLeft);
-  text_layer_setup(get_srise_txlayer(), sunrise_buffer, get_fontmed(), myGreen, GTextAlignmentLeft);
-  text_layer_setup(get_sset_txlayer(), sunset_buffer, get_fontmed(), myRed, GTextAlignmentLeft);
+  text_layer_setup(get_srise_txlayer(), sunrise_buffer, get_fontmed(), myGray, GTextAlignmentLeft);
+  text_layer_setup(get_sset_txlayer(), sunset_buffer, get_fontmed(), GColorBlack, GTextAlignmentLeft);
   text_layer_setup(get_temperature_txlayer(), temperature_buffer, get_fontmed(), myGreen, GTextAlignmentLeft);
   
   load_block_layers(get_clock_layer());

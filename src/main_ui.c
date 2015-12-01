@@ -82,14 +82,14 @@ static void initialise_ui(void) {
   layer_add_child(window_get_root_layer(s_window), (Layer *)usrinfo2_txlayer);
   
   // infol_txlayer
-  infol_txlayer = text_layer_create(GRect(43, 85, 40, 28));
-  text_layer_set_text(infol_txlayer, "000");
+  infol_txlayer = text_layer_create(GRect(39, 85, 50, 28));
+  text_layer_set_text(infol_txlayer, "00.00");
   text_layer_set_font(infol_txlayer, s_res_gothic_28_bold);
   layer_add_child(window_get_root_layer(s_window), (Layer *)infol_txlayer);
   
   // infor_txlayer
   infor_txlayer = text_layer_create(GRect(93, 85, 51, 28));
-  text_layer_set_text(infor_txlayer, "999");
+  text_layer_set_text(infor_txlayer, "99.99");
   text_layer_set_text_alignment(infor_txlayer, GTextAlignmentRight);
   text_layer_set_font(infor_txlayer, s_res_gothic_28_bold);
   layer_add_child(window_get_root_layer(s_window), (Layer *)infor_txlayer);

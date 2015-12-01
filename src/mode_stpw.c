@@ -59,7 +59,7 @@ static void update_stpw(void) {
 
 		// Sched handler at next elps second for updated display
 		next = (uint32_t)stpw_base_time.ms;
-		if (next < now.ms)
+   	if (next < now.ms)
 			next += 1000;
 		next -= now.ms;
 		stpw_timer = app_timer_register(next, handle_stpw_timer, NULL);
@@ -76,9 +76,9 @@ static void update_stpw(void) {
 		break;
 	}
 
-	uint16_t display_hour = hour_from_seconds(delta.sec);
-	uint16_t display_minute = minute_from_seconds(delta.sec);
-	uint16_t display_second = second_from_seconds(delta.sec);
+	unsigned display_hour = hour_from_seconds(delta.sec);
+	unsigned display_minute = minute_from_seconds(delta.sec);
+	unsigned display_second = second_from_seconds(delta.sec);
   
   if (stpw_maxed || display_hour > 99) {
     stpw_maxed = true;
@@ -108,7 +108,7 @@ static void stpw_start() {
 
 		get_current_sec_ms(&stpw_base_time);
 		subtract_sec_ms(&stpw_base_time, stpw_elps_time);
-
+    
 		if (sec_ms_is_zero(stpw_elps_time))
 			vibes_short_pulse();
 		break;

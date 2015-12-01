@@ -44,7 +44,7 @@ static void update_ctin(void) {
 	case ctdn_running: case ctdn_stopped:
     col = myGreen;
 	  snprintf(ctin_buffer, sizeof(ctin_buffer), "%02d:%02d",
-		  minute_from_seconds(ctdn_targ_secs),
+		  dminute_from_seconds(ctdn_targ_secs),
 		  second_from_seconds(ctdn_targ_secs));
     break;
   case ctdn_mh:
@@ -103,10 +103,10 @@ static void update_ctdn(void) {
     }
     else { // Already in overtime
       remaining = delta.sec;
-      if (remaining < 60 * 60) {
+      if (remaining < 100 * 60) {
         update_ctdn_status_icon(status_done);
       }
-      else { // Automatic reset at 60 minutes overtime
+      else { // Automatic reset at 100 minutes overtime
         ctdn_elps_time = (Sec_ms) { 0, 0 }; // Reset
         ctdn_overtime = false;
         ctdn_state = ctdn_stopped;

@@ -8,6 +8,7 @@ CONST(KEY_DJIA, 2);
 CONST(KEY_NASDAQ, 3);
 CONST(KEY_SUNRISE, 4);
 CONST(KEY_SUNSET, 5);
+CONST(KEY_STOCKS_NA, 10000);
 
 int get_temperature(void);
 int get_sunrise(void);

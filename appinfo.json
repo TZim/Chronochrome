@@ -2,6 +2,7 @@
     "appKeys": {
         "KEY_DJIA": 2,
         "KEY_NASDAQ": 3,
+        "KEY_STOCKS_NA": 10000,
         "KEY_SUNRISE": 4,
         "KEY_SUNSET": 5,
         "KEY_TEMPERATURE": 0,
@@ -29,7 +30,7 @@
         "basalt"
     ],
     "uuid": "a4f19f47-c3a1-4c8f-b0b5-3787a85000cd",
-    "versionLabel": "2.1",
+    "versionLabel": "2.6",
     "watchapp": {
         "watchface": false
     }

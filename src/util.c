@@ -30,16 +30,16 @@ void subtract_sec_ms(Sec_ms *secms, Sec_ms dec) {
 	secms->sec -= dec.sec;
 }
 
-uint16_t hour_from_seconds(uint16_t secs) {
-	return (secs / 3600) % 100;
+unsigned hour_from_seconds(time_t secs) {
+	return (secs / 3600);
 }
-uint16_t minute_from_seconds(uint16_t secs) {
+unsigned minute_from_seconds(time_t secs) {
 	return (secs / 60) % 60;
 }
-uint16_t dminute_from_seconds(uint16_t secs) {
+unsigned dminute_from_seconds(time_t secs) {
 	return (secs / 60) % 100;
 }
-uint16_t second_from_seconds(uint16_t secs) {
+unsigned second_from_seconds(time_t secs) {
 	return secs % 60;
 }
 

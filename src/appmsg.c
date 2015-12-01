@@ -4,12 +4,15 @@
 #include "util.h"
 #include "appmsg.h"
 #include "mode_info.h"
+
+static unsigned appmsg_send_buffer_bytes = 1024;
+static unsigned appmsg_recv_buffer_bytes = 1024;
   
 static int appmsg_temperature = 999;
 static int appmsg_sunrise = 0;
 static int appmsg_sunset = 0;
 static int appmsg_utc_offset = 99;
-static int stock_data[2] = {STOCK_NA, STOCK_NA};
+static int stock_data[2] = {KEY_STOCKS_NA, KEY_STOCKS_NA};
 static bool appmsg_new_temperature = true;
 static bool appmsg_new_sun = true;
 static bool appmsg_new_utc_offset = true;
@@ -81,10 +84,12 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
 
 // n: change factor * 1000.
 static int stock_convert(int n) {
+  if (n == STOCK_NA)
+    return n;
   if (n > STOCK_NA - 1)
-    n = 999;
+    n = STOCK_NA-1;
   else if (n < 1 - STOCK_NA)
-    n = -999;
+    n = -STOCK_NA-1;
   return n;
 }
 
@@ -110,11 +115,13 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
       break;
     case KEY_DJIA:
       stock_data[0] = stock_convert((int)t->value->int32);
-      appmsg_new_stock_data = true;
+      if (stock_data[0] != STOCK_NA)
+        appmsg_new_stock_data = true;
       break;
     case KEY_NASDAQ:
       stock_data[1] = stock_convert((int)t->value->int32);
-      appmsg_new_stock_data = true;
+      if (stock_data[1] != STOCK_NA)
+        appmsg_new_stock_data = true;
       break;
     case KEY_SUNRISE:
       appmsg_sunrise = (int)t->value->int32;
@@ -140,12 +147,16 @@ void init_appmsg_callbacks() {
   app_message_register_outbox_failed(outbox_failed_callback);
   app_message_register_outbox_sent(outbox_sent_callback);
   
-  app_message_open(app_message_inbox_size_maximum(),
-                   app_message_outbox_size_maximum());
+  if (appmsg_recv_buffer_bytes > app_message_inbox_size_maximum())
+    appmsg_recv_buffer_bytes = app_message_inbox_size_maximum();
+  if (appmsg_send_buffer_bytes > app_message_outbox_size_maximum())
+    appmsg_send_buffer_bytes = app_message_outbox_size_maximum();
+  
+  app_message_open(appmsg_recv_buffer_bytes, appmsg_send_buffer_bytes);
 }
 
 void deinit_appmsg_callbacks() {
-  // app_message_deregister_callbacks();
+  app_message_deregister_callbacks();
 }
 
 void ping_appmsg_info() {

@@ -10,4 +10,4 @@ void deinit_info(void);
 int persist_info_data(int index);
 int restore_info_data(int index);
 
-#define STOCK_NA 1000
+#define STOCK_NA 10000

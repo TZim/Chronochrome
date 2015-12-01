@@ -7,7 +7,7 @@
   
 static bool info_mode = true;
 
-#define BLANK_STOCK "--.-"
+#define BLANK_STOCK "--.--"
 static char djia_buffer[] = BLANK_STOCK;
 static char nasdaq_buffer[] = BLANK_STOCK;
 
@@ -24,7 +24,7 @@ static void update_info_aux(int info, char *buffer, int size, TextLayer *txlayer
   if (info >= STOCK_NA)
     snprintf(buffer, size, BLANK_STOCK);
   else                
-    snprintf(buffer, size, "%02u.%01u", info / 10, info % 10);
+    snprintf(buffer, size, "%02u.%02u", info / 100, info % 100);
 }
 
 static int last_stock_djia = STOCK_NA + 1;

@@ -1,9 +1,11 @@
 var temperature = 999;
 var localtimezone = 99;
-var djia = 1000;
-var nasdaq = 1000;
+var KEY_STOCKS_NA = 10000;
+var djia = KEY_STOCKS_NA;
+var nasdaq = KEY_STOCKS_NA;
 var sunrise = 0;
 var sunset = 0;
+var OWMID = "&appid=bf84ccfefb4efc97324fdb60fdd42038";
 
 var xhrRequest = function (url, type, callback) {
   var xhr = new XMLHttpRequest();
@@ -23,11 +25,10 @@ function locationSuccess(pos) {
   var wx_url;
   if (false) { // true == FAKE_LOC
       wx_url = "http://api.openweathermap.org/data/2.5/weather?lat=" +
-                    42.34 + "&lon=" + -71.1;
-       
+                    42.34 + "&lon=" + -71.1 + OWMID;
   } else {
       wx_url = "http://api.openweathermap.org/data/2.5/weather?lat=" +
-                    pos.coords.latitude + "&lon=" + pos.coords.longitude;
+                    pos.coords.latitude + "&lon=" + pos.coords.longitude + OWMID;
   }
 
   // Send request to OpenWeatherMap
@@ -70,36 +71,72 @@ function refreshData() {
 }
 
 function getData() {
+    
+  // Get local timezone
+  localtimezone = (new Date()).getTimezoneOffset()/60;
+  // console.log("UTC offset is " + localtimezone);
+  
   getWeather();
   
   // Get stock-market data
   djia = 0;
   nasdaq = 0;
-  var djia_url = "http://finance.google.com/finance/info?client=ig&q=NYSE%3a.DJI";
-  var nasdaq_url = "http://finance.google.com/finance/info?client=ig&q=NASDAQ%3a.IXIC";
+  var stocks_url = "http://finance.google.com/finance/";
   // Send requests to Google Finance:
-  xhrRequest(djia_url, 'GET', 
-    function(responseText) {
-      responseText = responseText.substring(3);
-      // console.log("DJIA string " + responseText);
-      var json = JSON.parse(responseText);
-      djia = 10 * json[0].cp;
-      // console.log("DJIA is " + djia);
-    }
-  );
-  xhrRequest(nasdaq_url, 'GET', 
-    function(responseText) {
-      responseText = responseText.substring(3);
-      // console.log("NASDAQ string " + responseText);
-      var json = JSON.parse(responseText);
-      nasdaq = 10 * json[0].cp;
-      // console.log("NASDAQ is " + nasdaq);
-    }
-  );
+  var start, end;
+  var textnum;
+  var base, delta;
+  djia = KEY_STOCKS_NA;
+  nasdaq = KEY_STOCKS_NA;
   
-  // Get local timezone
-  localtimezone = (new Date()).getTimezoneOffset()/60;
-  // console.log("UTC offset is " + localtimezone);
+  xhrRequest(stocks_url, 'GET', 
+    function(responseText) {
+      responseText = responseText.substring(3);
+      start = responseText.indexOf("/finance?q=INDEXDJX:.DJI");
+      start = responseText.indexOf("Dow Jones", start);
+      start = responseText.indexOf("<span", start);
+      start = responseText.indexOf(">", start) + 1;
+      end = responseText.indexOf("</span", start);
+      textnum = responseText.substring(start, end);
+      textnum = textnum.replace(",", "");
+      base = parseFloat(textnum);
+      start = responseText.indexOf("<span", end);
+      start = responseText.indexOf(">", start) + 1;
+      end = responseText.indexOf("</span", start);
+      textnum = responseText.substring(start, end);
+      textnum = textnum.replace(",", "");
+      textnum = textnum.replace("+", "");
+      delta = parseFloat(textnum);
+      base = KEY_STOCKS_NA * delta / (base - delta);
+      if (!isNaN(base) && isFinite(base))
+        djia = base;
+    }
+  );
+
+  xhrRequest(stocks_url, 'GET', 
+    function(responseText) {
+      responseText = responseText.substring(3);
+      start = responseText.indexOf("/finance?q=INDEXNASDAQ:.IXIC");
+      start = responseText.indexOf("Nasdaq", start);
+      start = responseText.indexOf("<span", start);
+      start = responseText.indexOf(">", start) + 1;
+      end = responseText.indexOf("</span", start);
+      textnum = responseText.substring(start, end);
+      textnum = textnum.replace(",", "");
+      base = parseFloat(textnum);
+      start = responseText.indexOf("<span", end);
+      start = responseText.indexOf(">", start) + 1;
+      end = responseText.indexOf("</span", start);
+      textnum = responseText.substring(start, end);
+      textnum = textnum.replace(",", "");
+      textnum = textnum.replace("+", "");
+      delta = parseFloat(textnum);
+      base = KEY_STOCKS_NA * delta / (base - delta);
+      if (!isNaN(base) && isFinite(base))
+        nasdaq = base;
+    }
+  );
+
 }
   
 function sendData() {
