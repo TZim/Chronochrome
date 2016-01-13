@@ -7,8 +7,8 @@
 #include "appmsg.h"
 #include "util.h"
 
-static char usrinfo1[] = "Chronochrome by ";  // persist
-static char usrinfo2[] = "Cambridge Apps  ";  // persist
+static char usrinfo1[] = "Chronochrome by";  // persist
+static char usrinfo2[] = "Cambridge Apps ";  // persist
 
 static char time_buffer[] = "23:59";
 static char date_buffer[] = "2014-12-31 Sat...";
@@ -107,7 +107,9 @@ static void draw_block_layer(Layer *layer, GContext *ctx, int tick) {
   GColor dark = myGray;
   GColor light = GColorWhite;
   if (index >= 6)
-    dark = index >= 12 ? myRed : GColorBlack;  
+    dark = index >= 12 ? myRed : GColorBlack;
+  else if (time_display_hour >= 12)
+    dark = GColorBlack;
   
   bool ascending = tick < 30;
   
@@ -586,7 +588,7 @@ GPoint BTpoints[] = {{7, 6}, {15, 0}, {19, 3}, {3, 3}, {7, 0}, {15, 6}};
 
 static void draw_BT(Layer *btlay, GContext *ctx) {
   graphics_context_set_antialiased(ctx, true);
-  graphics_context_set_stroke_color(ctx, BT_connected ? myBlue : myGray);
+  graphics_context_set_stroke_color(ctx, BT_connected ? myBlue : myRed);
   graphics_context_set_stroke_width(ctx, 1);
   int n = 6; // sizeof(BTpoints);
   for (int i = 0; i < n-1; i++) {
@@ -600,6 +602,8 @@ static void update_BT(void) {
   if (BT_changed) {
     layer_mark_dirty(get_bt_layer());
     BT_changed = false;
+    if (!BT_connected)
+      vibes_long_pulse();
   }
 }
 
@@ -610,8 +614,8 @@ static int last_batt_level = -1;
 static int last_batt_charging = -1;
 
 static void draw_batt(Layer *battlay, GContext *ctx) {
-  graphics_context_set_stroke_color(ctx, GColorBlack);
-  graphics_context_set_fill_color(ctx, last_batt_charging == 1 ? myGreen : myGray);
+  graphics_context_set_stroke_color(ctx, myGreen);
+  graphics_context_set_fill_color(ctx, last_batt_charging == 1 ? myRed : myGreen);
   int height = 2 * last_batt_level;
   //int pad = 20 - height;
   int xpad = 2;

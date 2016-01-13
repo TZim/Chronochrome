@@ -28,12 +28,12 @@ bool sec_ms_is_zero(Sec_ms n);
 void localtm(time_t *time, struct tm *tm1);
 
 #define FAKE_TIME false
-#define FAKE_HOUR 9
-#define FAKE_MIN 17
+#define FAKE_HOUR 12
+#define FAKE_MIN 8
 #define FAKE_SEC 00
-#define FAKE_MDAY 23
-#define FAKE_MON 7
-#define FAKE_YEAR 2015
+#define FAKE_MDAY 12
+#define FAKE_MON 1
+#define FAKE_YEAR 2016
 #define FAKE_DJIA 3
 #define FAKE_NASDAQ 8
   
