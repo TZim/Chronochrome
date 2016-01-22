@@ -7,8 +7,8 @@
 #include "appmsg.h"
 #include "util.h"
 
-static char usrinfo1[] = "Chronochrome by";  // persist
-static char usrinfo2[] = "Cambridge Apps ";  // persist
+static char usrinfo1[] = "Chronochrome by ";  // persist
+static char usrinfo2[] = "Cambridge Apps  ";  // persist
 
 static char time_buffer[] = "23:59";
 static char date_buffer[] = "2014-12-31 Sat...";
@@ -293,9 +293,7 @@ static void refresh_min(void) {
   else if (now > last_ping_appmsg_time + ping_appmsg_seconds){
     if  (BT_is_connected()) {
       ping_for_info(now);
-    } else {
-      APP_LOG(APP_LOG_LEVEL_INFO, "Ping skipped");
-    }
+    } // else { APP_LOG(APP_LOG_LEVEL_INFO, "Ping skipped"); }
   }
   //APP_LOG(APP_LOG_LEVEL_INFO, "update_min %d %s", (int)now, time_buffer);
 }
@@ -363,17 +361,6 @@ static void handle_second_tick(struct tm *tm, TimeUnits units_changed) {
   }
   time_handle_second_tick(tm, units_changed);    
   
-  time_t now = time(NULL);
-  if (last_ping_appmsg_time == 0)
-    last_ping_appmsg_time = now; // Skip 1st ping bc 1st data spontaneous
-  else if (now > last_ping_appmsg_time + ping_appmsg_seconds){
-    if  (BT_is_connected()) {
-      ping_for_info(now);
-    } else {
-      APP_LOG(APP_LOG_LEVEL_INFO, "Ping skipped");
-    }
-  }
-
   update_BT();
 }
 
