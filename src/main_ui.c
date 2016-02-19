@@ -111,7 +111,7 @@ static void initialise_ui(void) {
   layer_add_child(window_get_root_layer(s_window), (Layer *)stcd_layer);
   
   // clock_layer
-  clock_layer = layer_create(GRect(100, 2, 40, 40));
+  clock_layer = layer_create(GRect(96, 2, 44, 40));
   layer_add_child(window_get_root_layer(s_window), (Layer *)clock_layer);
 }
 

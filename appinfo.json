@@ -12,6 +12,7 @@
         "location"
     ],
     "companyName": "Cambridge Apps",
+    "enableMultiJS": false,
     "longName": "Chronochrome",
     "projectType": "native",
     "resources": {
@@ -30,7 +31,7 @@
         "basalt"
     ],
     "uuid": "a4f19f47-c3a1-4c8f-b0b5-3787a85000cd",
-    "versionLabel": "2.8",
+    "versionLabel": "2.9",
     "watchapp": {
         "watchface": false
     }
