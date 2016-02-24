@@ -25,27 +25,27 @@ static Layer *clock_layer;
 static void initialise_ui(void) {
   s_window = window_create();
   #ifndef PBL_SDK_3
-    window_set_fullscreen(s_window, true);
+    window_set_fullscreen(s_window, 0);
   #endif
   
   s_res_roboto_bold_subset_49 = fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49);
   s_res_gothic_28_bold = fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD);
   s_res_gothic_14 = fonts_get_system_font(FONT_KEY_GOTHIC_14);
   // time_txlayer
-  time_txlayer = text_layer_create(GRect(0, 35, 144, 50));
+  time_txlayer = text_layer_create(GRect(0, 31, 144, 50));
   text_layer_set_text(time_txlayer, "00:00");
   text_layer_set_text_alignment(time_txlayer, GTextAlignmentCenter);
   text_layer_set_font(time_txlayer, s_res_roboto_bold_subset_49);
   layer_add_child(window_get_root_layer(s_window), (Layer *)time_txlayer);
   
   // utc_txlayer
-  utc_txlayer = text_layer_create(GRect(1, 85, 34, 30));
+  utc_txlayer = text_layer_create(GRect(1, 83, 34, 30));
   text_layer_set_text(utc_txlayer, "00z");
   text_layer_set_font(utc_txlayer, s_res_gothic_28_bold);
   layer_add_child(window_get_root_layer(s_window), (Layer *)utc_txlayer);
   
   // date_txlayer
-  date_txlayer = text_layer_create(GRect(0, 112, 144, 28));
+  date_txlayer = text_layer_create(GRect(0, 111, 144, 28));
   text_layer_set_text(date_txlayer, "2000-01-01 Sat");
   text_layer_set_text_alignment(date_txlayer, GTextAlignmentCenter);
   text_layer_set_font(date_txlayer, s_res_gothic_28_bold);
@@ -70,25 +70,25 @@ static void initialise_ui(void) {
   layer_add_child(window_get_root_layer(s_window), (Layer *)temperature_txlayer);
   
   // usrinfo1_txlayer
-  usrinfo1_txlayer = text_layer_create(GRect(0, 12, 102, 16));
+  usrinfo1_txlayer = text_layer_create(GRect(0, 8, 102, 16));
   text_layer_set_text(usrinfo1_txlayer, "Gary L. Drescher");
   text_layer_set_font(usrinfo1_txlayer, s_res_gothic_14);
   layer_add_child(window_get_root_layer(s_window), (Layer *)usrinfo1_txlayer);
   
   // usrinfo2_txlayer
-  usrinfo2_txlayer = text_layer_create(GRect(0, 26, 100, 16));
+  usrinfo2_txlayer = text_layer_create(GRect(0, 22, 100, 16));
   text_layer_set_text(usrinfo2_txlayer, "gld@alum.mit.edu");
   text_layer_set_font(usrinfo2_txlayer, s_res_gothic_14);
   layer_add_child(window_get_root_layer(s_window), (Layer *)usrinfo2_txlayer);
   
   // infol_txlayer
-  infol_txlayer = text_layer_create(GRect(39, 85, 50, 28));
+  infol_txlayer = text_layer_create(GRect(39, 83, 50, 28));
   text_layer_set_text(infol_txlayer, "00.00");
   text_layer_set_font(infol_txlayer, s_res_gothic_28_bold);
   layer_add_child(window_get_root_layer(s_window), (Layer *)infol_txlayer);
   
   // infor_txlayer
-  infor_txlayer = text_layer_create(GRect(93, 85, 51, 28));
+  infor_txlayer = text_layer_create(GRect(93, 83, 51, 28));
   text_layer_set_text(infor_txlayer, "99.99");
   text_layer_set_text_alignment(infor_txlayer, GTextAlignmentRight);
   text_layer_set_font(infor_txlayer, s_res_gothic_28_bold);
@@ -111,7 +111,7 @@ static void initialise_ui(void) {
   layer_add_child(window_get_root_layer(s_window), (Layer *)stcd_layer);
   
   // clock_layer
-  clock_layer = layer_create(GRect(96, 2, 44, 40));
+  clock_layer = layer_create(GRect(96, 2, 44, 34));
   layer_add_child(window_get_root_layer(s_window), (Layer *)clock_layer);
 }
 
@@ -139,12 +139,13 @@ static void handle_window_unload(Window* window) {
   destroy_ui();
 }
 
-void show_main_ui(void) {
+Window *show_main_ui(void) {
   initialise_ui();
   window_set_window_handlers(s_window, (WindowHandlers) {
     .unload = handle_window_unload,
   });
   window_stack_push(s_window, true);
+  return s_window;
 }
 
 void hide_main_ui(void) {

@@ -21,6 +21,7 @@
                 "file": "images/chron_icon.png",
                 "menuIcon": true,
                 "name": "IMAGE_MENU_ICON",
+                "targetPlatforms": null,
                 "type": "bitmap"
             }
         ]
@@ -31,7 +32,7 @@
         "basalt"
     ],
     "uuid": "a4f19f47-c3a1-4c8f-b0b5-3787a85000cd",
-    "versionLabel": "2.9",
+    "versionLabel": "2.10",
     "watchapp": {
         "watchface": false
     }

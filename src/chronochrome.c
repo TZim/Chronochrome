@@ -86,21 +86,25 @@ static void draw_grid(Layer *layer, GContext *ctx) {
 } 
 */
 
+static const int blockinc = 2;
 static const int border_padx = 0;
 static const int border_pady = 0;
 static const int blockx = 6;
-static const int blocky = 10;
-static const int blockinc = 2;
+static const int blockdivs = 5;
+static const int hrblockdivs = 3;
+static int blocky;
+static int hrblocky;
 static const int dotoffx = 2;
-static const int dotoffy = 4;
+//static const int dotoffy = 4;
 static const int dotx = 2;
 static const int doty = 2;
 static const int block_gap = 1;
 static const int block3_gap = 4;
 static const int hr_min_gap = 4;
-static const int min_sec_gap = 6;
+static const int min_sec_gap = 4;
 
-static void draw_block_layer(Layer *layer, GContext *ctx, int tick) {
+static void draw_block_layer(Layer *layer, GContext *ctx, int divs, int tick, int auxtick) {
+  
   BlockData *data = (BlockData *)layer_get_data(layer);
   int index = data->index;
   int blockn = index % 6;
@@ -111,58 +115,67 @@ static void draw_block_layer(Layer *layer, GContext *ctx, int tick) {
   else if (time_display_hour >= 12)
     dark = GColorBlack;
   
-  bool ascending = tick < 30;
+  bool ascending = tick < 6 * divs;
   
   if (!ascending)
-    tick -= 30;
+    tick -= 6 * divs;
   
-  int targn = tick / 5;
-  int subtick = tick - targn * 5;
+  int targn = tick / divs;
+  int subtick = tick % divs;
   
-  int height = blocky;
   bool blockdark = ascending == (blockn <= targn);
   bool dotdark = !blockdark;
+  
+  int height = divs * blockinc;
+  int ht = height;
+  int dotoffy = divs - 1;
             
   if (targn == blockn) {
-    height = blockinc * subtick;
-    if (subtick < 3)
+    ht = blockinc * subtick + auxtick;
+    if (subtick < (divs+1) /2)
       dotdark = !dotdark;
   }
-  
-  
+  //else return; //xxxx
+
   graphics_context_set_fill_color(ctx, blockdark ? dark : light);
-  graphics_fill_rect(ctx, RECT(0, blocky - height, blockx, height), 0, GCornerNone);
+  graphics_fill_rect(ctx, RECT(0, height - ht, blockx, ht), 0, GCornerNone);
   
   graphics_context_set_fill_color(ctx, blockdark ? light : dark);
-  graphics_fill_rect(ctx, RECT(0, 0, blockx, blocky - height), 0, GCornerNone);
+  graphics_fill_rect(ctx, RECT(0, 0, blockx, height - ht), 0, GCornerNone);
   
   graphics_context_set_fill_color(ctx, dotdark ? dark : light);
   graphics_fill_rect(ctx, RECT(dotoffx, dotoffy, dotx, doty), 0, GCornerNone);
 }
 
 static void draw_block_hr_layer(Layer *layer, GContext *ctx) {
-  draw_block_layer(layer, ctx, clock_hr_tick);
+  int auxtick = clock_min_tick % (60 / hrblockdivs);
+  auxtick = auxtick * blockinc / (60 / hrblockdivs);
+  draw_block_layer(layer, ctx, hrblockdivs, clock_hr_tick, auxtick);
 }
 static void draw_block_min_layer(Layer *layer, GContext *ctx) {
-  draw_block_layer(layer, ctx, clock_min_tick);
+  draw_block_layer(layer, ctx, blockdivs, clock_min_tick, 0);
 }
 static void draw_block_sec_layer(Layer *layer, GContext *ctx) {
-  draw_block_layer(layer, ctx, clock_sec_tick);
+  draw_block_layer(layer, ctx, blockdivs, clock_sec_tick, 0);
 }
 
   
-static void update_block(int tick, int index_offset) {
-  tick = tick -1;
+static void update_block(int tick, int divs, int index_offset) {
+
+  tick = tick -1;  // Previous tick is the one to update (.e.g at 0000, 2359 changes)
   if (tick < 0)
-    tick = 59;
-  int index = tick / 5;
-  if (index > 5)
+    tick = 12 * divs - 1;
+  
+  int index = tick / divs;
+  if (index >= 6)
     index -= 6;
+      
   layer_mark_dirty(block_layers[index + index_offset]);  // Trigger re-draw
 }
 
 static bool full_hours = false;
 
+// True=inc update. False=needs full update.
 bool update_clock_incrementally(struct tm *tm) {
   
   int sec_tick = tm->tm_sec;
@@ -176,9 +189,9 @@ bool update_clock_incrementally(struct tm *tm) {
   
   if (hr_tick >= 12)
     hr_tick -= 12;
-  hr_tick *= 5;
+  hr_tick *= hrblockdivs;
   if (!full_hours)
-    hr_tick += min_tick / 12;
+    hr_tick += min_tick / (60 / hrblockdivs);
   
   clock_sec_tick = sec_tick;
   clock_min_tick = min_tick;
@@ -194,27 +207,29 @@ bool update_clock_incrementally(struct tm *tm) {
   if (time != last_time)
     return false;
   
-  update_block(sec_tick, 12);  
+  update_block(sec_tick, blockdivs, 12);  
   if (sec_tick != 0)
     return true;
   
-  update_block(min_tick, 6);
-  if (min_tick != 0)
-    return true;
-  
-  update_block(hr_tick, 0);  
+  update_block(min_tick, blockdivs, 6);
+ 
+  update_block(hr_tick, hrblockdivs, 0);  
   
   return true;
 }
 
 static void load_block_layers(Layer *clayer) {
+    
+  blocky = blockdivs * blockinc;
+  hrblocky = hrblockdivs * blockinc;
+  
   LayerUpdateProc proc = draw_block_hr_layer;
   
   for (int i = 0, j = 0, i_offset = border_padx, j_offset = border_pady; i < 18; i++, j++, i_offset += blockx + block_gap) {
     if (i == 6) {
       j = 0;
       i_offset = border_padx;
-      j_offset += blocky + hr_min_gap;
+      j_offset += hrblocky + hr_min_gap;
       proc = draw_block_min_layer;
     } 
     else if (i == 12) {
@@ -354,6 +369,7 @@ static void handle_second_tick(struct tm *tm, TimeUnits units_changed) {
     tm->tm_min = FAKE_MIN + fake_min_inc;
     tm->tm_sec = FAKE_SEC + fake_sec_inc;
     tm->tm_mday = FAKE_MDAY;
+    tm->tm_wday = FAKE_WDAY;
     tm->tm_mon = FAKE_MON;
     tm->tm_year = FAKE_YEAR - 1900;
     units_changed |= 
@@ -451,6 +467,8 @@ static void update_appmsg_info(struct tm *tm) {
   }
   if (new_temperature()) {
     datum = get_temperature();
+    if (FAKE_TIME)
+      datum = FAKE_TEMP;
     if (datum != 99)
       temperature = datum;
     update_wx();
@@ -975,7 +993,7 @@ TextLayer *text_layer_new(Layer *parent_layer, GRect bounds, char *buffer,
 
 	return txlayer;
 }
-  
+
 static void init(void) {    
   restore_data();
   
@@ -987,7 +1005,9 @@ static void init(void) {
   text_layer_setup(get_sset_txlayer(), sunset_buffer, get_fontmed(), GColorBlack, GTextAlignmentLeft);
   text_layer_setup(get_temperature_txlayer(), temperature_buffer, get_fontmed(), myGreen, GTextAlignmentLeft);
   
-  load_block_layers(get_clock_layer());
+  //layer_set_update_proc(window_get_root_layer(win), update_clock_layer); //xxxx
+  //layer_set_update_proc(get_clock_layer(), update_clock_layer); //xxxx
+  load_block_layers(get_clock_layer());  //(window_get_root_layer(win)); //xxxx
   
   init_time();
   init_info();
@@ -1005,12 +1025,10 @@ static void init(void) {
   battery_state_service_subscribe(handle_battery_state);
 	bluetooth_connection_service_subscribe(handle_bt_state);
   
-  // layer_set_update_proc(get_clock_layer(), draw_clock);
   layer_set_update_proc(get_bt_layer(), draw_BT);
   layer_set_update_proc(get_batt_layer(), draw_batt);
   layer_set_update_proc(get_stsw_layer(), draw_stpw_status);
   layer_set_update_proc(get_stcd_layer(), draw_ctdn_status);
-  //layer_set_update_proc(get_grid_layer(), draw_grid);
 
 	handle_bt_state(bluetooth_connection_service_peek());
   handle_battery_state(battery_state_service_peek());

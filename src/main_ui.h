@@ -1,4 +1,4 @@
-void show_main_ui(void);
+Window* show_main_ui(void);
 void hide_main_ui(void);
 
 Window *get_window(void);

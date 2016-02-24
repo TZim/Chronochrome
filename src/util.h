@@ -29,12 +29,14 @@ void localtm(time_t *time, struct tm *tm1);
 
 #define FAKE_TIME false
 #define FAKE_HOUR 15
-#define FAKE_MIN 8
+#define FAKE_MIN 49
 #define FAKE_SEC 00
-#define FAKE_MDAY 10
-#define FAKE_MON 0
+#define FAKE_MDAY 23
+#define FAKE_WDAY 2
+#define FAKE_MON 1
 #define FAKE_YEAR 2016
-#define FAKE_DJIA 3
-#define FAKE_NASDAQ 8
+#define FAKE_DJIA -133
+#define FAKE_NASDAQ 82
+#define FAKE_TEMP -2
   
 #define FAKE_LOC false // see also appmsg.js
