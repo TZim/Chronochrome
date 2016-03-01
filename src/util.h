@@ -29,7 +29,7 @@ void localtm(time_t *time, struct tm *tm1);
 
 #define FAKE_TIME false
 #define FAKE_HOUR 15
-#define FAKE_MIN 49
+#define FAKE_MIN 30
 #define FAKE_SEC 00
 #define FAKE_MDAY 23
 #define FAKE_WDAY 2

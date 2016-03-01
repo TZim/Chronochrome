@@ -143,8 +143,15 @@ static void draw_block_layer(Layer *layer, GContext *ctx, int divs, int tick, in
   graphics_context_set_fill_color(ctx, blockdark ? light : dark);
   graphics_fill_rect(ctx, RECT(0, 0, blockx, height - ht), 0, GCornerNone);
   
+  int dht = 0;
+  if (targn == blockn && ht >= dotoffy && ht < dotoffy + doty)
+    dht += auxtick;
+  
+  graphics_context_set_fill_color(ctx, dotdark ? light : dark);
+  graphics_fill_rect(ctx, RECT(dotoffx, dotoffy + doty - dht, dotx, dht), 0, GCornerNone);
+  
   graphics_context_set_fill_color(ctx, dotdark ? dark : light);
-  graphics_fill_rect(ctx, RECT(dotoffx, dotoffy, dotx, doty), 0, GCornerNone);
+  graphics_fill_rect(ctx, RECT(dotoffx, dotoffy, dotx, doty - dht), 0, GCornerNone);
 }
 
 static void draw_block_hr_layer(Layer *layer, GContext *ctx) {
