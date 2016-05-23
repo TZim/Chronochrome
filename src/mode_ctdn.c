@@ -64,6 +64,17 @@ static void update_ctin(void) {
 	layer_mark_dirty(text_layer_get_layer(ctin_txlayer));
 }
 
+static const uint32_t const triple_pulse_segments[] = {500, 200, 500, 200, 500};
+
+VibePattern triple_pulse_pattern = {
+  .durations = triple_pulse_segments,
+  .num_segments = ARRAY_LENGTH(triple_pulse_segments),
+};
+
+static void triple_pulse(void) {
+  vibes_enqueue_custom_pattern(triple_pulse_pattern);
+}
+
 // Called at load time and from button handlers (start, stop, mode) and timer handler
 static void update_ctdn(void) {
 	// check for timer expired (if resuming persisted app)
@@ -97,7 +108,7 @@ static void update_ctdn(void) {
         ctdn_overtime = true;
         remaining = -remaining;
         ctdn_base_time.sec += ctdn_targ_secs; // Base time is time when target was reached.
-			  vibes_long_pulse();
+			  triple_pulse();
         update_ctdn_status_icon(status_done);
       }
     }

@@ -34,7 +34,7 @@ static bool BT_connected = false;
 static bool BT_changed = true;
 
 static time_t last_ping_appmsg_time = 0;
-CONST(ping_appmsg_seconds, 60 * 10);
+CONST(ping_appmsg_seconds, 60 * 20);
 
 void ping_for_info(time_t now); // forward references
 static void update_wx(void);
