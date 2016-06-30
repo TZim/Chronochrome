@@ -52,13 +52,13 @@ static void initialise_ui(void) {
   layer_add_child(window_get_root_layer(s_window), (Layer *)date_txlayer);
   
   // srise_txlayer
-  srise_txlayer = text_layer_create(GRect(1, 139, 49, 28));
+  srise_txlayer = text_layer_create(GRect(1, 139, 50, 28));
   text_layer_set_text(srise_txlayer, "06:00");
   text_layer_set_font(srise_txlayer, s_res_gothic_28_bold);
   layer_add_child(window_get_root_layer(s_window), (Layer *)srise_txlayer);
   
   // sset_txlayer
-  sset_txlayer = text_layer_create(GRect(54, 139, 49, 28));
+  sset_txlayer = text_layer_create(GRect(55, 139, 50, 28));
   text_layer_set_text(sset_txlayer, "18:00");
   text_layer_set_font(sset_txlayer, s_res_gothic_28_bold);
   layer_add_child(window_get_root_layer(s_window), (Layer *)sset_txlayer);

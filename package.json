@@ -1,0 +1,43 @@
+{
+    "author": "Cambridge Apps",
+    "dependencies": {},
+    "keywords": [],
+    "name": "chrnchrm",
+    "pebble": {
+        "capabilities": [
+            "location"
+        ],
+        "displayName": "Chronochrome",
+        "enableMultiJS": false,
+        "messageKeys": {
+            "KEY_DJIA": 2,
+            "KEY_NASDAQ": 3,
+            "KEY_STOCKS_NA": 10000,
+            "KEY_SUNRISE": 4,
+            "KEY_SUNSET": 5,
+            "KEY_TEMPERATURE": 0,
+            "KEY_UTC_OFFSET": 1
+        },
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "file": "images/chron_icon.png",
+                    "menuIcon": true,
+                    "name": "IMAGE_MENU_ICON",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "basalt"
+        ],
+        "uuid": "a4f19f47-c3a1-4c8f-b0b5-3787a85000cd",
+        "watchapp": {
+            "watchface": false
+        }
+    },
+    "version": "2.13.0"
+}
